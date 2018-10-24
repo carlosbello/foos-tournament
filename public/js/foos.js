@@ -207,41 +207,21 @@ function select_result() {
 function select_result_direct() {
 	player = $(this).data("player");
 	result_direct = $(this).data("result-direct");
-	// FIXME: This if/else sequence could obviously be made
-	// cleaner, but for the moment it works OK :)
-	if (player == 0 && result_direct == 3) {
-		update_selected_result(1, 5, 2);
-		update_selected_result(2, 5, 2);
-		update_selected_result(3, 5, 2);
-	} else if (player == 0 && result_direct == 0) {
-		update_selected_result(1, 2, 5);
-		update_selected_result(2, 2, 5);
-		update_selected_result(3, 2, 5);
-	} else if (player == 1 && result_direct == 3) {
-		update_selected_result(1, 5, 2);
-		update_selected_result(2, 2, 5);
-		update_selected_result(3, 2, 5);
-	} else if (player == 1 && result_direct == 0) {
-		update_selected_result(1, 2, 5);
-		update_selected_result(2, 5, 2);
-		update_selected_result(3, 5, 2);
-	} else if (player == 2 && result_direct == 3) {
-		update_selected_result(1, 2, 5);
-		update_selected_result(2, 5, 2);
-		update_selected_result(3, 2, 5);
-	} else if (player == 2 && result_direct == 0) {
-		update_selected_result(1, 5, 2);
-		update_selected_result(2, 2, 5);
-		update_selected_result(3, 5, 2);
-	} else if (player == 3 && result_direct == 3) {
-		update_selected_result(1, 2, 5);
-		update_selected_result(2, 2, 5);
-		update_selected_result(3, 5, 2);
-	} else if (player == 3 && result_direct == 0) {
-		update_selected_result(1, 5, 2);
-		update_selected_result(2, 5, 2);
-		update_selected_result(3, 2, 5);
-	}
+	updates_by_player_result = {
+		"03": [[5, 2], [5, 2], [5, 2]],  // player 0 wins all matches
+		"00": [[2, 5], [2, 5], [5, 2]],  // player 0 lose all matches
+		"13": [[5, 2], [2, 5], [2, 5]],  // player 1 wins all matches
+		"10": [[2, 5], [5, 2], [5, 2]],  // player 1 lose all matches
+		"23": [[2, 5], [5, 2], [2, 5]],  // player 2 wins all matches
+		"20": [[5, 2], [2, 5], [5, 2]],  // player 2 lose all matches
+		"33": [[2, 5], [2, 5], [5, 2]],  // player 3 wins all matches
+		"30": [[5, 2], [5, 2], [2, 5]],  // player 3 lose all matches
+	};
+	player_result = "".concat(player, result_direct);
+
+	(updates_by_player_result[player_result] || []).map(function (result, index) {
+		update_selected_result(index + 1, result[0], result[1]);
+	});
 	run_simulation();
 	return false;
 }
